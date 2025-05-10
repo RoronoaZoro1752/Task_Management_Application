@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom'
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
-  const [users, setUsers] = useState([]); // load users from backend
+  const [users, setUsers] = useState([]); 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [dueDateFilter, setDueDateFilter] = useState("");
@@ -23,7 +23,6 @@ const Dashboard = () => {
     assignedTo: "",
   });
 
-  // Fetch tasks and users on mount
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -37,7 +36,7 @@ const Dashboard = () => {
     const fetchUsers = async () => {
       try {
         const usersRes = await axios.get('/tasks/getallusers');
-        // Convert users to needed format for dropdown e.g. {id: user._id, name: user.firstName + " " + user.lastName}
+
         const formattedUsers = usersRes?.data.map(user => ({
           id: user._id,
           name: `${user.firstName} ${user.lastName}`
@@ -71,7 +70,7 @@ const Dashboard = () => {
 
     try {
       if (editTaskId !== null) {
-        // Update existing task
+       
         const response = await axios.put(`/tasks/${editTaskId}`, {
           title: taskForm.title,
           description: taskForm.description,
@@ -81,7 +80,7 @@ const Dashboard = () => {
         });
         setTasks(tasks.map((t) => (t._id === editTaskId ? response.data : t)));
       } else {
-        // Create new task
+        
         const response = await axios.post('/tasks', {
           title: taskForm.title,
           description: taskForm.description,
@@ -112,7 +111,7 @@ const Dashboard = () => {
       description: task.description,
       dueDate: task.dueDate ? task.dueDate.substr(0,10) : "",
       status: task.status,
-      assignedTo: task.assignedTo._id || task.assignedTo, // sometimes assignedTo may be populated user object
+      assignedTo: task.assignedTo._id || task.assignedTo, 
     });
     setEditTaskId(task._id);
     setShowForm(true);
@@ -130,12 +129,6 @@ const Dashboard = () => {
     }
   };
 
-  // Filter overdue based on backend data
-//   const overdueTasks = tasks.filter(
-//     (task) => new Date(task.dueDate) < new Date() && task.status !== "Done"
-//   );
-
-  // Filters for UI
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch =
       task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
